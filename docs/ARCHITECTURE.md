@@ -27,7 +27,7 @@ jobpilot-agent/
     providers/
     api/
     services/
-  main.py
+    main.py
   frontend/
   data/
   tests/
@@ -43,6 +43,7 @@ jobpilot-agent/
 - `app/providers`：LLM 与未来外部服务适配器。
 - `app/api`：FastAPI 路由。
 - `app/services`：不属于 Agent Tool 的确定性内部服务。
+- `app/main.py`：FastAPI 应用入口。
 - `frontend`：Streamlit 前端。
 - `data`：本地 `jobs.json`、示例简历和项目数据。
 - `tests`：单元测试与集成测试。
@@ -58,6 +59,8 @@ Frontend 指面向用户的交互界面。MVP 计划使用 Streamlit，负责收
 ### API
 
 API 指系统对外的程序入口。MVP 计划使用 FastAPI，负责请求校验、会话上下文传递、调用 Agent 服务并返回结构化响应。
+
+`app/main.py` 是 FastAPI 应用入口；仓库根目录不得创建 `main.py`。
 
 ### Agent
 

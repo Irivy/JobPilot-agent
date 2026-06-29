@@ -13,6 +13,12 @@
 - `RequirementMatch`：岗位要求与证据的匹配条目，承载匹配状态、命中证据、缺口说明和评分贡献。
 - `ToolWarning`：可恢复提醒，承载 `code`、`message` 和可选 `context`。
 - `ToolError`：结构化错误对象，承载 `code`、`message`、`recoverable` 和可选 `context`。
+- `ToolFailure`：无法构造合法领域结果时的统一失败分支，至少包含一个
+  `recoverable=false` 的 `ToolError`。
+
+成功载荷中的 `errors` 只能包含可恢复错误。无法构造合法领域对象时，Tool
+返回 `ToolFailure`，不得使用占位字段伪造 `CandidateProfile`、`JobDetail`、
+`FitReport` 或 `ApplicationPack`。
 
 ## 1. `load_candidate_profile`
 
@@ -23,7 +29,8 @@
 ### Schema
 
 - Input: `LoadCandidateProfileInput`
-- Output: `CandidateProfileResult`
+- Success: `CandidateProfileSuccess`
+- Output: `CandidateProfileResult = CandidateProfileSuccess | ToolFailure`
 
 ### 使用时机
 
@@ -42,18 +49,17 @@
 - `parsing_mode: str`
 - `target_role_hint: str | null`
 
-### 输出字段
+`resume_text` 与 `resume_path` 必须恰好提供一个；契约校验不读取或解析文件。
 
-- `candidate_profile_id: str`
-- `summary_facts: list[CandidateFact]`
-- `skills: list[CandidateSkill]`
-- `experiences: list[CandidateExperience]`
-- `education: list[EducationItem]`
-- `certifications: list[CertificationItem]`
+### 成功输出字段
+
+- `candidate_profile: CandidateProfile`
 - `evidence_items: list[EvidenceItem]`
-- `missing_fields: list[str]`
 - `warnings: list[ToolWarning]`
 - `errors: list[ToolError]`
+
+`candidate_profile_id`、`missing_fields`、技能、经历、教育和证书由
+`CandidateProfile` 统一承载，不在成功载荷中重复保存。
 
 ### 可能的错误
 
@@ -81,7 +87,8 @@
 ### Schema
 
 - Input: `SearchJobsInput`
-- Output: `JobSearchResult`
+- Success: `JobSearchSuccess`
+- Output: `JobSearchResult = JobSearchSuccess | ToolFailure`
 
 ### 使用时机
 
@@ -95,19 +102,22 @@
 
 ### 输入字段
 
-- `query: str`
+- `query: str | null`
 - `location_preferences: list[str]`
 - `keywords: list[str]`
 - `seniority: str | null`
 - `work_mode: str | null`
 - `limit: int`
 
+`query` 或 `keywords` 必须至少提供一项；`limit` 范围为 1 到 100。位置和关键词
+按忽略大小写方式去重并保留首次出现顺序。
+
 ### 输出字段
 
 - `results: list[JobSummary]`
 - `result_count: int`
-- `applied_filters: dict`
-- `search_source: str`
+- `applied_filters: SearchJobsInput`
+- `search_source: JobSourceType.JOBS_DATASET`
 - `warnings: list[ToolWarning]`
 - `errors: list[ToolError]`
 
@@ -136,7 +146,7 @@
 ### Schema
 
 - Input: `ReadJobDetailInput`
-- Output: `JobDetail`
+- Output: `ReadJobDetailResult = JobDetail | ToolFailure`
 
 ### 使用时机
 
@@ -151,7 +161,7 @@
 ### 输入字段
 
 - `job_id: str`
-- `source: str`
+- `source: JobSourceType.JOBS_DATASET`
 
 ### 输出字段
 
@@ -163,7 +173,7 @@
 - `responsibilities: list[str]`
 - `requirements: list[JobRequirement]`
 - `preferred_qualifications: list[JobRequirement]`
-- `raw_text: str`
+- `raw_text: str | null`
 - `warnings: list[ToolWarning]`
 - `errors: list[ToolError]`
 
@@ -182,6 +192,7 @@
 - 只能读取本地岗位库中存在的记录。
 - 不得伪造不存在的岗位字段。
 - 不用于解析用户直接提供的原始 JD 文本；该路径属于 Agent 内部结构化节点。
+- `JobDetail` 是成功分支；无法构造合法岗位详情时返回 `ToolFailure`。
 
 ## 4. `inspect_project_evidence`
 
@@ -192,7 +203,8 @@
 ### Schema
 
 - Input: `InspectProjectEvidenceInput`
-- Output: `EvidenceScanResult`
+- Success: `EvidenceScanSuccess`
+- Output: `EvidenceScanResult = EvidenceScanSuccess | ToolFailure`
 
 ### 使用时机
 
@@ -208,15 +220,19 @@
 
 ### 输入字段
 
-- `project_path: str`
+- `project_path: LocalPathStr`
 - `skills_to_verify: list[str]`
 - `keywords: list[str]`
 - `max_files: int`
 - `allowed_extensions: list[str]`
 
+`project_path` 只表示用户授权的本地路径，不允许网络 URI 或 UNC 网络路径。
+扩展名统一转为小写并带前导点，例如 `py`、`.PY` 都规范化为 `.py`；禁止通配符和路径。
+`skills_to_verify` 或 `keywords` 必须至少提供一项，`max_files` 范围为 1 到 1000。
+
 ### 输出字段
 
-- `project_path: str`
+- `project_path: LocalPathStr`
 - `evidence_hits: list[EvidenceItem]`
 - `files_scanned: int`
 - `truncated: bool`
@@ -249,7 +265,7 @@
 ### Schema
 
 - Input: `ScoreJobFitInput`
-- Output: `FitReport`
+- Output: `ScoreJobFitResult = FitReport | ToolFailure`
 
 ### 使用时机
 
@@ -268,7 +284,7 @@
 - `candidate_profile: CandidateProfile`
 - `evidence_ledger: list[EvidenceItem]`
 - `scoring_version: str`
-- `weights: dict | null`
+- `weights: ScoringWeights | null`
 
 ### 输出字段
 
@@ -300,6 +316,7 @@
 - 不得根据未验证事实加分。
 - 输出应区分“已匹配”“部分匹配”“证据不足”。
 - 只消费结构化 `target_job`，不直接消费原始 JD 文本。
+- `FitReport` 是成功分支；无法构造合法评分结果时返回 `ToolFailure`。
 
 ## 6. `generate_application_pack`
 
@@ -310,7 +327,7 @@
 ### Schema
 
 - Input: `GenerateApplicationPackInput`
-- Output: `ApplicationPack`
+- Output: `GenerateApplicationPackResult = ApplicationPack | ToolFailure`
 
 ### 使用时机
 
@@ -360,5 +377,6 @@
 - 每条候选人经历、技能和亮点都必须能追溯到 `evidence_id`。
 - 不得直接修改用户原始简历文件，不得自动投递。
 - 只消费结构化 `target_job`，不直接消费原始 JD 文本。
+- `ApplicationPack` 是成功分支；无法构造合法材料包时返回 `ToolFailure`。
 
 字段命名约定、State 集成方式和模块边界见 `docs/ARCHITECTURE.md`。

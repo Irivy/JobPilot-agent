@@ -45,12 +45,11 @@
 ### 输出字段
 
 - `candidate_profile_id: str`
-- `summary_facts: list[dict]`
-- `skills: list[dict]`
+- `summary_facts: list[CandidateFact]`
 - `skills: list[CandidateSkill]`
 - `experiences: list[CandidateExperience]`
-- `education: list[dict]`
-- `certifications: list[dict]`
+- `education: list[EducationItem]`
+- `certifications: list[CertificationItem]`
 - `evidence_items: list[EvidenceItem]`
 - `missing_fields: list[str]`
 - `warnings: list[ToolWarning]`
@@ -105,7 +104,7 @@
 
 ### 输出字段
 
-- `results: list[dict]`
+- `results: list[JobSummary]`
 - `result_count: int`
 - `applied_filters: dict`
 - `search_source: str`
@@ -266,7 +265,7 @@
 ### 输入字段
 
 - `target_job: JobDetail`
-- `candidate_profile: dict`
+- `candidate_profile: CandidateProfile`
 - `evidence_ledger: list[EvidenceItem]`
 - `scoring_version: str`
 - `weights: dict | null`
@@ -326,9 +325,9 @@
 
 ### 输入字段
 
-- `candidate_profile: dict`
+- `candidate_profile: CandidateProfile`
 - `target_job: JobDetail`
-- `fit_report: dict`
+- `fit_report: FitReport`
 - `evidence_ledger: list[EvidenceItem]`
 - `output_language: str`
 - `tone: str`
@@ -336,11 +335,11 @@
 ### 输出字段
 
 - `application_pack_id: str`
-- `candidate_summary: list[dict]`
-- `role_fit_summary: list[dict]`
-- `resume_adjustment_suggestions: list[dict]`
-- `cover_letter_points: list[dict]`
-- `fact_check_items: list[dict]`
+- `candidate_summary: list[EvidenceBackedStatement]`
+- `role_fit_summary: list[EvidenceBackedStatement]`
+- `resume_adjustment_suggestions: list[ResumeAdjustmentSuggestion]`
+- `cover_letter_points: list[EvidenceBackedStatement]`
+- `fact_check_items: list[FactCheckItem]`
 - `warnings: list[ToolWarning]`
 - `errors: list[ToolError]`
 

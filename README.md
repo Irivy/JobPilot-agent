@@ -1,17 +1,19 @@
 ﻿# JobPilot
 
-JobPilot is currently in the Python scaffold stage. This repository now contains
-project configuration, package layout, a minimal FastAPI application entrypoint,
-and a local in-process health check test.
+JobPilot has completed its Python scaffold and core schema-contract stages. The
+repository contains project configuration, package layout, a minimal FastAPI
+application entrypoint, and local schema and health-check tests.
 
 ## Current Status
 
-- The repository is at the engineering scaffold stage.
+- The Python application scaffold is complete.
 - A minimal FastAPI app exists at `app/main.py`.
 - `GET /health` returns `{"status": "ok"}`.
 - FastAPI docs are available at `/docs` when the local server is running.
-- No JobPilot agent logic, tool implementations, business schemas, or Streamlit
-  business pages have been implemented yet.
+- Core business schemas, `AgentState`, and the six Tool input/output contracts
+  are defined.
+- Tool business logic, the Agent Loop, and Streamlit business pages have not
+  been implemented yet.
 
 ## Python Requirement
 

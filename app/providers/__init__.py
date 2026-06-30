@@ -11,6 +11,14 @@ from app.providers.jobs import (
     JobsProviderError,
     LocalJobsProvider,
 )
+from app.providers.project_files import (
+    LocalProjectFilesProvider,
+    ProjectFilesProvider,
+    ProjectFilesProviderError,
+    ProjectFilesUnreadableError,
+    ProjectPathNotAccessibleError,
+    ProjectPathNotFoundError,
+)
 
 __all__ = [
     "DuplicateJobIdError",
@@ -22,4 +30,10 @@ __all__ = [
     "JobsProvider",
     "JobsProviderError",
     "LocalJobsProvider",
+    "LocalProjectFilesProvider",
+    "ProjectFilesProvider",
+    "ProjectFilesProviderError",
+    "ProjectFilesUnreadableError",
+    "ProjectPathNotAccessibleError",
+    "ProjectPathNotFoundError",
 ]

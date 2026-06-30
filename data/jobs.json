@@ -1,0 +1,318 @@
+[
+  {
+    "job_id": "job-python-backend-001",
+    "source": "jobs_dataset",
+    "title": "Python Backend Engineer",
+    "company": "Northstar Labs",
+    "location": "Shanghai",
+    "employment_type": "full_time",
+    "seniority": "mid",
+    "work_mode": "hybrid",
+    "summary": "Build reliable Python API services for a workflow automation platform.",
+    "responsibilities": [
+      "Design and maintain FastAPI services",
+      "Improve PostgreSQL query performance",
+      "Develop automated tests and service observability"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "backend-req-python",
+        "text": "Strong Python programming experience",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "backend-req-fastapi",
+        "text": "Experience building REST APIs with FastAPI",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "backend-req-sql",
+        "text": "Practical PostgreSQL and data modeling skills",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "backend-pref-docker",
+        "text": "Experience deploying services with Docker",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Mid-level hybrid Python backend role in Shanghai using FastAPI, PostgreSQL, Docker, and automated testing."
+  },
+  {
+    "job_id": "job-ai-agent-001",
+    "source": "jobs_dataset",
+    "title": "AI Agent Engineer",
+    "company": "Orbit Forge",
+    "location": "Beijing",
+    "employment_type": "full_time",
+    "seniority": "senior",
+    "work_mode": "remote",
+    "summary": "Create reliable agent systems that combine language models with deterministic tools.",
+    "responsibilities": [
+      "Design stateful agent workflows",
+      "Build typed tool interfaces and evaluation suites",
+      "Measure agent quality with reproducible test cases"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "agent-req-python",
+        "text": "Advanced Python engineering experience",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "agent-req-llm",
+        "text": "Experience developing LLM agent applications",
+        "requirement_type": "experience",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "agent-req-evaluation",
+        "text": "Ability to design automated agent evaluations",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "agent-pref-langgraph",
+        "text": "Experience with LangGraph or comparable stateful orchestration",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Senior remote AI Agent Engineer role based in Beijing, focused on Python, LLM tools, state management, and evaluation."
+  },
+  {
+    "job_id": "job-machine-learning-001",
+    "source": "jobs_dataset",
+    "title": "Machine Learning Engineer",
+    "company": "Cedar Intelligence",
+    "location": "Shenzhen",
+    "employment_type": "full_time",
+    "seniority": "mid",
+    "work_mode": "onsite",
+    "summary": "Develop and productionize machine learning models for industrial forecasting.",
+    "responsibilities": [
+      "Train and evaluate forecasting models",
+      "Build reproducible feature pipelines",
+      "Deploy model inference services"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "ml-req-python",
+        "text": "Python experience for machine learning systems",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "ml-req-pytorch",
+        "text": "Hands-on experience with PyTorch",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "ml-req-statistics",
+        "text": "Strong statistics and model evaluation knowledge",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "ml-pref-mlflow",
+        "text": "Experience with MLflow model lifecycle tooling",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Mid-level onsite machine learning engineering role in Shenzhen using Python, PyTorch, statistics, and MLflow."
+  },
+  {
+    "job_id": "job-data-engineer-001",
+    "source": "jobs_dataset",
+    "title": "Senior Data Engineer",
+    "company": "Riverstone Systems",
+    "location": "Hangzhou",
+    "employment_type": "full_time",
+    "seniority": "senior",
+    "work_mode": "hybrid",
+    "summary": "Build dependable batch and streaming data pipelines for analytics products.",
+    "responsibilities": [
+      "Develop Spark data processing jobs",
+      "Operate Airflow workflow orchestration",
+      "Define data quality checks and lineage"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "data-req-sql",
+        "text": "Advanced SQL and data warehouse design",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "data-req-spark",
+        "text": "Production experience with Apache Spark",
+        "requirement_type": "experience",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "data-req-airflow",
+        "text": "Experience operating Airflow pipelines",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "data-pref-kafka",
+        "text": "Knowledge of Kafka streaming systems",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Senior hybrid data engineering role in Hangzhou covering SQL, Spark, Airflow, Kafka, data quality, and lineage."
+  },
+  {
+    "job_id": "job-frontend-001",
+    "source": "jobs_dataset",
+    "title": "Frontend Engineer",
+    "company": "Pixel Harbor",
+    "location": "Shanghai",
+    "employment_type": "contract",
+    "seniority": "mid",
+    "work_mode": "remote",
+    "summary": "Develop accessible user interfaces for a collaborative planning product.",
+    "responsibilities": [
+      "Build React and TypeScript features",
+      "Maintain component tests and accessibility checks",
+      "Collaborate with product designers on responsive interactions"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "frontend-req-react",
+        "text": "Strong React development experience",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "frontend-req-typescript",
+        "text": "Proficiency with TypeScript",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "frontend-req-accessibility",
+        "text": "Knowledge of web accessibility standards",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "frontend-pref-playwright",
+        "text": "Experience with Playwright browser testing",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Mid-level remote frontend contract role in Shanghai using React, TypeScript, accessibility, and Playwright."
+  },
+  {
+    "job_id": "job-devops-cloud-001",
+    "source": "jobs_dataset",
+    "title": "Senior DevOps and Cloud Engineer",
+    "company": "Summit Relay",
+    "location": "Chengdu",
+    "employment_type": "full_time",
+    "seniority": "senior",
+    "work_mode": "onsite",
+    "summary": "Operate secure cloud infrastructure and improve software delivery reliability.",
+    "responsibilities": [
+      "Manage Kubernetes production clusters",
+      "Maintain Terraform infrastructure modules",
+      "Improve CI/CD reliability and incident response"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "devops-req-kubernetes",
+        "text": "Production Kubernetes operations experience",
+        "requirement_type": "experience",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "devops-req-terraform",
+        "text": "Infrastructure as code experience with Terraform",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "devops-req-linux",
+        "text": "Strong Linux systems knowledge",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "devops-pref-aws",
+        "text": "Experience operating workloads on AWS",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "Senior onsite DevOps and cloud role in Chengdu using Kubernetes, Terraform, Linux, AWS, and CI/CD."
+  },
+  {
+    "job_id": "job-data-platform-cn-001",
+    "source": "jobs_dataset",
+    "title": "数据平台工程师 Data Platform Engineer",
+    "company": "星河数据工坊",
+    "location": "Wuhan",
+    "employment_type": "full_time",
+    "seniority": "junior",
+    "work_mode": "remote",
+    "summary": "建设面向分析团队的数据平台，维护稳定的数据采集与质量监控流程。",
+    "responsibilities": [
+      "使用 Python 开发数据采集任务",
+      "维护 SQL 数据转换与质量检查",
+      "编写中英文技术文档"
+    ],
+    "requirements": [
+      {
+        "requirement_id": "data-cn-req-python",
+        "text": "具备 Python 基础开发能力",
+        "requirement_type": "skill",
+        "priority": "required"
+      },
+      {
+        "requirement_id": "data-cn-req-sql",
+        "text": "能够编写 SQL 查询并理解关系型数据模型",
+        "requirement_type": "skill",
+        "priority": "required"
+      }
+    ],
+    "preferred_qualifications": [
+      {
+        "requirement_id": "data-cn-pref-dbt",
+        "text": "了解 dbt 或类似数据转换工具",
+        "requirement_type": "skill",
+        "priority": "preferred",
+        "is_required": false
+      }
+    ],
+    "raw_text": "武汉初级远程数据平台工程师岗位，涉及 Python、SQL、数据质量和中英文文档。"
+  }
+]

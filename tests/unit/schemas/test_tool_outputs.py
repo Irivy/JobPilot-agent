@@ -29,7 +29,6 @@ from app.schemas import (
     SearchJobsInput,
     ToolError,
     ToolFailure,
-    ToolWarning,
 )
 from pydantic import TypeAdapter, ValidationError
 
@@ -109,18 +108,15 @@ def make_evidence_scan_success() -> EvidenceScanSuccess:
     )
 
 
-def test_tool_failure_requires_nonrecoverable_error() -> None:
+def test_tool_failure_requires_errors_with_any_recoverability() -> None:
     with pytest.raises(ValidationError):
         ToolFailure(errors=[])
 
-    with pytest.raises(ValidationError):
-        ToolFailure(errors=[make_error(recoverable=True)])
+    recoverable_failure = ToolFailure(errors=[make_error(recoverable=True)])
+    nonrecoverable_failure = ToolFailure(errors=[make_error(recoverable=False)])
 
-    failure = ToolFailure(
-        warnings=[ToolWarning(code="partial", message="Partial work discarded")],
-        errors=[make_error(recoverable=True), make_error(recoverable=False)],
-    )
-    assert failure.status == "failure"
+    assert recoverable_failure.status == "failure"
+    assert nonrecoverable_failure.status == "failure"
 
 
 def test_candidate_profile_success_validates_evidence_integrity() -> None:
@@ -297,7 +293,7 @@ def test_complete_result_types_validate_and_round_trip_tool_failure(
         GenerateApplicationPackResult,
     ],
 )
-def test_complete_result_types_reject_recoverable_only_tool_failure(
+def test_complete_result_types_accept_recoverable_tool_failure(
     result_type: object,
 ) -> None:
     failure_payload = {
@@ -311,8 +307,10 @@ def test_complete_result_types_reject_recoverable_only_tool_failure(
         ],
     }
 
-    with pytest.raises(ValidationError):
-        TypeAdapter(result_type).validate_python(failure_payload)
+    result = TypeAdapter(result_type).validate_python(failure_payload)
+
+    assert isinstance(result, ToolFailure)
+    assert result.errors[0].recoverable is True
 
 
 @pytest.mark.parametrize(

@@ -56,6 +56,8 @@ class JobSummary(JobPilotBaseModel):
     company: NonEmptyStr
     location: NonEmptyStr | None = None
     employment_type: NonEmptyStr | None = None
+    seniority: NonEmptyStr | None = None
+    work_mode: NonEmptyStr | None = None
     summary: NonEmptyStr | None = None
 
 
@@ -68,6 +70,9 @@ class JobDetail(JobPilotBaseModel):
     company: NonEmptyStr
     location: NonEmptyStr | None = None
     employment_type: NonEmptyStr | None = None
+    seniority: NonEmptyStr | None = None
+    work_mode: NonEmptyStr | None = None
+    summary: NonEmptyStr | None = None
     responsibilities: list[NonEmptyStr] = Field(default_factory=list)
     requirements: list[JobRequirement] = Field(default_factory=list)
     preferred_qualifications: list[JobRequirement] = Field(default_factory=list)

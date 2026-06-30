@@ -12,8 +12,9 @@ application entrypoint, and local schema and health-check tests.
 - FastAPI docs are available at `/docs` when the local server is running.
 - Core business schemas, `AgentState`, and the six Tool input/output contracts
   are defined.
-- Tool business logic, the Agent Loop, and Streamlit business pages have not
-  been implemented yet.
+- The local jobs Provider, `search_jobs`, and `read_job_detail` are implemented.
+- The other four Tools, Agent Loop, business API routes, and Streamlit business
+  pages have not been implemented yet.
 
 ## Python Requirement
 

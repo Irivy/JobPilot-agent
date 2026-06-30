@@ -262,12 +262,55 @@ summary/responsibilities 3、company/location/employment type/seniority/work mod
 - `warnings: list[ToolWarning]`
 - `errors: list[ToolError]`
 
-### 可能的错误
+`files_scanned` 是成功解码并实际参与匹配的文件数；仅读取受限前缀的文件仍计入。
+当文件数、目录项、总读取字节、单文件前缀、每目标 Evidence 数量或总 Evidence
+数量达到限制时，`truncated=true`，并通过 warning 说明具体原因。
 
-- `project_path_missing`
-- `project_path_not_found`
-- `project_path_not_accessible`
-- `scan_limit_exceeded`
+### 扫描与匹配规则
+
+- Provider 独占真实文件系统访问。Tool 只消费 Provider 返回的内部 `ProjectFile`
+  快照，不直接遍历或读取磁盘。
+- Provider 解析授权根目录，并拒绝读取解析后位于根目录之外的文件。目录 symlink
+  和 junction 不递归；文件 symlink 只有在指向根目录内普通文件时才可读取。
+- 隐藏目录、常见依赖或构建目录、二进制文件、明显凭据文件及私钥内容会被跳过。
+  文件读取使用 UTF-8 严格解码，支持 UTF-8 BOM，并受文件数、目录项、单文件字节
+  和总字节限制。
+- 文本依次执行 NFKC、camelCase/acronym 边界拆分、分隔符规范化、空白合并和
+  `casefold`；保留 `+` 和 `#`，中文使用规范化子字符串匹配。
+- 每个 skill 和 keyword 独立匹配；同一规范化目标同时出现时优先保留 skill。
+  扩展名本身不作为技能证据。
+- 命中优先级依次为：源码或配置完整 token/短语、README 或文档完整 token/短语、
+  文件名或路径组件精确命中、普通内容子字符串命中。同一目标在同一文件中的重复
+  命中合并，选择质量最高且行号最早的位置。
+- 最终结果按命中等级、目标类型、规范化目标、相对路径、行号和 `evidence_id`
+  稳定排序。每个目标最多 5 条 Evidence，总计最多 50 条。
+- 项目 Evidence 的置信度仅使用 `MEDIUM` 和 `LOW`：源码或配置中的完整 token/短语
+  为 `MEDIUM`，文档、路径和普通子字符串命中为 `LOW`。词法命中不产生 `HIGH`。
+  词法命中只表示项目中出现了相关内容，不等同于候选人熟练掌握该技能。
+- `evidence_id` 为带版本输入的 SHA-256 截断值，输入包含解析后根目录的摘要、
+  相对路径、目标类型、规范化目标、命中类型、行号和命中行摘要。绝对路径不直接
+  出现在 ID、Evidence 或错误上下文中；项目移动后 ID 可以变化。
+- 内容摘录最多包含命中行前后各一行，总长度不超过 600 字符，并对常见秘密赋值
+  做保守脱敏。
+
+### 成功、警告与失败
+
+- 无匹配返回成功，并附 `no_project_evidence` warning。
+- 无可参与匹配的文件返回成功，并附 `no_scannable_project_files` warning。
+- 达到扫描限制返回成功，并附 `scan_limit_exceeded` warning；不是
+  `ToolFailure`。
+- 单文件不可读或解码失败、但仍有其他文件成功时，返回成功并附聚合的可恢复
+  `project_file_unreadable` 或 `project_file_decode_failed` error。
+- 根路径不存在返回可恢复的 `ToolFailure(project_path_not_found)`。
+- 根路径不是目录或无法访问返回可恢复的
+  `ToolFailure(project_path_not_accessible)`。
+- 存在读取候选但所有候选均不可读或不可解码时，返回可恢复的
+  `ToolFailure(project_files_unreadable)`。
+- `project_path_missing` 已由输入 Schema 阻止，不由 Tool 伪造。
+
+同类 Provider issue 会聚合成单个 warning 或 error；context 只包含总计数、少量
+相对路径样例和限制或安全类别。成功结果中的所有 error 都必须
+`recoverable=true`。
 
 ### 是否存在外部副作用
 
@@ -278,6 +321,7 @@ summary/responsibilities 3、company/location/employment type/seniority/work mod
 - 只读取用户明确授权的本地目录。
 - 不执行项目代码，不安装依赖，不写入项目文件。
 - 对扫描范围和文件数量设置上限，避免越界读取或资源滥用。
+- 不输出解析后的绝对根路径、完整文件内容或检测到的秘密值。
 
 ## 5. `score_job_fit`
 

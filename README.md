@@ -13,8 +13,11 @@ application entrypoint, and local schema and health-check tests.
 - Core business schemas, `AgentState`, and the six Tool input/output contracts
   are defined.
 - The local jobs Provider, `search_jobs`, and `read_job_detail` are implemented.
-- The other four Tools, Agent Loop, business API routes, and Streamlit business
-  pages have not been implemented yet.
+- The bounded local project-files Provider and `inspect_project_evidence` are
+  implemented.
+- `load_candidate_profile`, `score_job_fit`, `generate_application_pack`, the
+  Agent Loop, business API routes, and Streamlit business pages have not been
+  implemented yet.
 
 ## Python Requirement
 

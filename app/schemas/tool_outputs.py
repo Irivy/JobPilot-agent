@@ -45,13 +45,6 @@ class ToolFailure(JobPilotBaseModel):
     warnings: list[ToolWarning] = Field(default_factory=list)
     errors: list[ToolError] = Field(min_length=1)
 
-    @model_validator(mode="after")
-    def validate_nonrecoverable_error(self) -> ToolFailure:
-        if all(error.recoverable for error in self.errors):
-            msg = "ToolFailure requires at least one non-recoverable error"
-            raise ValueError(msg)
-        return self
-
 
 class CandidateProfileSuccess(JobPilotBaseModel):
     """Successful candidate-profile result and its extracted evidence."""

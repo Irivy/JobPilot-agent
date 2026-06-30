@@ -70,9 +70,16 @@ Agent 负责读取当前 State、决定下一步 Tool、控制最大步数、判
 
 Tool 是可被 Agent 调用的原子能力，例如搜索岗位、读取岗位详情、检查项目证据、评分和生成材料。Tool 本身不负责全局流程决策。
 
+`search_jobs` 和 `read_job_detail` 通过依赖注入接收 `JobsProvider`，不直接打开或
+解析 `jobs.json`，也不持有 `AgentState`。
+
 ### Providers / Adapters
 
 Provider 或 Adapter 负责封装数据源和未来的外部服务，例如本地 `jobs.json`、未来的招聘网站接口、LLM 调用封装。所有网络访问都必须通过这一层。
+
+`JobsProvider` 是岗位数据访问边界。`LocalJobsProvider` 接收由组合根提供的
+`data/jobs.json` 路径，延迟加载并缓存验证后的岗位；对外返回深拷贝，防止 Tool
+或其他调用方污染缓存。MVP 不自动监听或刷新文件变化。
 
 ### Schemas
 

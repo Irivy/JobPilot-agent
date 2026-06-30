@@ -28,18 +28,24 @@ def test_job_models_can_be_created() -> None:
         source=JobSourceType.JOBS_DATASET,
         title="Backend Engineer",
         company="Acme",
+        seniority="mid",
+        work_mode="hybrid",
     )
     detail = JobDetail(
         job_id="job-1",
         source=JobSourceType.PROVIDED_JD,
         title="Backend Engineer",
         company="Acme",
+        seniority="mid",
+        work_mode="hybrid",
         responsibilities=["Build APIs"],
         requirements=[make_requirement()],
     )
 
     assert summary.job_id == "job-1"
     assert detail.source is JobSourceType.PROVIDED_JD
+    assert JobSummary.model_validate(summary.model_dump()) == summary
+    assert JobDetail.model_validate(detail.model_dump()) == detail
 
 
 def test_job_summary_rejects_blank_title() -> None:

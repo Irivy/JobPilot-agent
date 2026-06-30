@@ -13,12 +13,13 @@
 - `RequirementMatch`：岗位要求与证据的匹配条目，承载匹配状态、命中证据、缺口说明和评分贡献。
 - `ToolWarning`：可恢复提醒，承载 `code`、`message` 和可选 `context`。
 - `ToolError`：结构化错误对象，承载 `code`、`message`、`recoverable` 和可选 `context`。
-- `ToolFailure`：无法构造合法领域结果时的统一失败分支，至少包含一个
-  `recoverable=false` 的 `ToolError`。
+- `ToolFailure`：本次调用无法构造成功载荷时的统一失败分支，至少包含一个
+  `ToolError`；其中错误可以全部为可恢复错误。
 
 成功载荷中的 `errors` 只能包含可恢复错误。无法构造合法领域对象时，Tool
 返回 `ToolFailure`，不得使用占位字段伪造 `CandidateProfile`、`JobDetail`、
-`FitReport` 或 `ApplicationPack`。
+`FitReport` 或 `ApplicationPack`。Agent 应依据每个 `ToolError.recoverable`
+决定换用其他路径或终止，而不能仅根据结果是否为 `ToolFailure` 判断。
 
 ## 1. `load_candidate_profile`
 
@@ -112,6 +113,16 @@
 `query` 或 `keywords` 必须至少提供一项；`limit` 范围为 1 到 100。位置和关键词
 按忽略大小写方式去重并保留首次出现顺序。
 
+搜索使用 NFKC、`casefold`、标点转空格和连续空白合并进行规范化。query token
+全部命中才符合条件；keywords 中任一完整短语命中即可。location preferences
+内部为 OR，seniority 和 work mode 使用规范化精确匹配，各过滤组之间为 AND。
+如果输入在规范化后不含有效搜索项，则返回可恢复的 `search_query_empty`。
+
+固定字段权重为：title 8、requirements 5、preferred qualifications 4、
+summary/responsibilities 3、company/location/employment type/seniority/work mode 1。
+每个唯一搜索项只取命中字段的最高权重。结果按总分降序、标题命中数降序、
+`job_id.casefold()` 和原始 `job_id` 升序排列，再应用 limit；内部得分不对外返回。
+
 ### 输出字段
 
 - `results: list[JobSummary]`
@@ -127,6 +138,9 @@
 - `jobs_dataset_invalid`
 - `search_query_empty`
 
+数据集缺失使用不可恢复的 `jobs_dataset_missing`；数据集不可读、格式错误、记录
+无效或 `job_id` 重复使用不可恢复的 `jobs_dataset_invalid`。
+
 ### 是否存在外部副作用
 
 无外部副作用。
@@ -136,6 +150,8 @@
 - 仅允许访问本地岗位数据源。
 - 不得访问真实招聘网站或外部网络。
 - 返回摘要时避免泄露不必要的内部字段。
+- 数据源正常但没有匹配项时返回 `JobSearchSuccess(results=[])`，并附加
+  `code=no_job_matches` 的可恢复 warning，不返回 `ToolFailure`。
 
 ## 3. `read_job_detail`
 
@@ -170,6 +186,9 @@
 - `company: str`
 - `location: str | null`
 - `employment_type: str | null`
+- `seniority: str | null`
+- `work_mode: str | null`
+- `summary: str | null`
 - `responsibilities: list[str]`
 - `requirements: list[JobRequirement]`
 - `preferred_qualifications: list[JobRequirement]`
@@ -182,6 +201,10 @@
 - `job_id_missing`
 - `job_not_found`
 - `job_record_invalid`
+
+`job_not_found` 返回 `recoverable=true` 的 `ToolFailure`。数据集缺失、不可读或
+无效时返回不可恢复的 `ToolFailure`，分别使用 `jobs_dataset_missing` 或
+`jobs_dataset_invalid`；记录校验失败使用 `job_record_invalid`。
 
 ### 是否存在外部副作用
 
